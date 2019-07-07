@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Content;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fireball_Dodger
 {
@@ -33,12 +34,15 @@ namespace Fireball_Dodger
         private Texture2D flameDemonTitle_dark1;
         private Texture2D flameDemonTitle_dark2;
         private Texture2D flameDemonTitle_dark3;
+        private Texture2D characterImage;
         Rectangle flameDemonShape;
+        private Rectangle characterShape;
         Rectangle titleScreenShape;
         private int darkenTimer;
         private int darkenIncrement;
         private bool darkenImage = false;
         private Texture2D flameDemonOriginal;
+        List<Rectangle> characterFrames;
         #endregion
 
         public TitleScreen(Game game) : base(game)
@@ -55,14 +59,17 @@ namespace Fireball_Dodger
             this.v2 = v2;
             titleScreen = true;
             titleScreenShape = new Rectangle(0, 0, 1000, 1000);
-            flameDemonShape = new Rectangle(410, 260, 128, 128);
+            flameDemonShape = new Rectangle(470, 260, 128, 128);
+            characterShape = new Rectangle(350, 310, 80, 80);
+            characterFrames = new List<Rectangle>();
             speakerShape = new Rectangle(200, 30, 128 / 2, 128 / 2);
             LoadContent();
 
              
             MediaPlayer.Volume = 0.05f;
             MediaPlayer.Play(backgroundSoundTrack);
-           
+            characterFrames.Add(new Rectangle(150, 265, 36, 32));
+
         }
 
         /// <summary>
@@ -79,6 +86,7 @@ namespace Fireball_Dodger
             flameDemonTitle_dark1 = content.Load<Texture2D>(@"FlameDemon\flameDemonTitle_dark1");
             flameDemonTitle_dark2 = content.Load<Texture2D>(@"FlameDemon\flameDemonTitle_dark2");
             flameDemonTitle_dark3 = content.Load<Texture2D>(@"FlameDemon\flameDemonTitle_dark3");
+            characterImage = content.Load<Texture2D>(@"Player\adventurerSheet");
             font = content.Load<SpriteFont>("font");
             backgroundSoundTrack = content.Load<Song>(@"Sound\soundtrack_title");
             //speakerImage = content.Load<Texture2D>("speaker_on");
@@ -142,6 +150,9 @@ namespace Fireball_Dodger
                 spriteBatch.Draw(titleScreenBG, titleScreenShape, Color.White);
                 //spriteBatch.Draw(flameDemonTitle, flameDemonShape, Color.White);
                 spriteBatch.DrawString(font, "Press enter to play", new Vector2(410, 420), Color.White);
+                spriteBatch.Draw(characterImage,
+                        characterShape, characterFrames.ElementAt<Rectangle>(0), Color.AliceBlue, 0f,
+                        new Vector2(0), SpriteEffects.None, 0f);
 
                 darkenTimer++;
 
