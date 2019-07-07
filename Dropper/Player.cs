@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using C3.XNA;
-//using PROG2370CollisionLibrary;
 using Microsoft.Xna.Framework.Audio;
 
 namespace Fireball_Dodger
@@ -87,7 +86,7 @@ namespace Fireball_Dodger
 
         public Player(Game game, SpriteBatch spriteBatch, ContentManager content, Background b) : base(game)
         {
-
+            //Setup initial variables
             this.spriteBatch = spriteBatch;
             this.content = content;
             this.b = b;
@@ -97,55 +96,6 @@ namespace Fireball_Dodger
             playerAlive = true;
             playerFrames = new List<Rectangle>();
             endGameBox = new Rectangle(350, 250, 300, 120);
-
-
-            #region oldplayerAnimationFrames
-            /*
-            //stand 5 frames
-            playerFrames.Add(new Rectangle(8, 0, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(40, 0, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(72, 0, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(104, 0, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(136, 0, playerWidth, playerHeight));
-
-
-            //Walk 9 frames
-            playerFrames.Add(new Rectangle(39, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(71, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(103, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(135, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(166, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(199, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(231, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(263, 64, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(295, 64, playerWidth, playerHeight));
-
-            //attack 10 frames
-            playerFrames.Add(new Rectangle(6, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(38, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(67, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(99, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(130, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(163, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(196, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(230, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(260, 256, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(293, 256, playerWidth, playerHeight));
-
-
-            //death 10 frames
-            playerFrames.Add(new Rectangle(6, 288, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(38, 288, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(67, 288, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(100, 288, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(134, 291, 21, 31));
-            playerFrames.Add(new Rectangle(166, 293, 25, 30));
-            playerFrames.Add(new Rectangle(197, 296, 22, 27));
-            playerFrames.Add(new Rectangle(228, 298, 27, 22));
-            playerFrames.Add(new Rectangle(260, 305, 28, 16));
-            playerFrames.Add(new Rectangle(292, 312, 28, 9));
-            */
-            #endregion
 
             #region newplayerAnimationFrames
             //stand frames (0-3)
@@ -157,7 +107,7 @@ namespace Fireball_Dodger
             playerFrames.Add(new Rectangle(136, 0, playerWidth, playerHeight));
             */
 
-            
+
             //Walk frames (4-8)
             playerFrames.Add(new Rectangle(66, 44, playerWidth, playerHeight));
             playerFrames.Add(new Rectangle(115, 44, playerWidth, playerHeight));
@@ -179,13 +129,13 @@ namespace Fireball_Dodger
             playerFrames.Add(new Rectangle(215, 80, playerWidth, playerHeight));
             playerFrames.Add(new Rectangle(263, 82, playerWidth, playerHeight));
             playerFrames.Add(new Rectangle(317, 82, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(10,  123, playerWidth, playerHeight));
-            playerFrames.Add(new Rectangle(66,  113, playerWidth, playerHeight));
+            playerFrames.Add(new Rectangle(10, 123, playerWidth, playerHeight));
+            playerFrames.Add(new Rectangle(66, 113, playerWidth, playerHeight));
             playerFrames.Add(new Rectangle(117, 113, playerWidth, playerHeight));
 
 
-             
-            
+
+
 
             /*
             //attack 10 frames
@@ -223,17 +173,21 @@ namespace Fireball_Dodger
         {
             spriteBatch.Begin();
 
-
             //Determine whether to display Coloured Sprite or Normal Sprite
             if (powerUpActive)
             {
+
                 if (Powerup.powerupType == 0)
                 {
+                    //Draw rock powerup player sprite
                     spriteBatch.Draw(spriteSheet_powerUp,
                         player, playerFrames.ElementAt<Rectangle>(currentFrame), Color.AliceBlue, 0f,
                         new Vector2(0), spriteDirection, 0f);
-                } else
+                }
+                else
+
                 {
+                    //Draw lava lens flare
                     spriteBatch.Draw(spriteSheet,
                         player, playerFrames.ElementAt<Rectangle>(currentFrame), Color.AliceBlue, 0f,
                         new Vector2(0), spriteDirection, 0f);
@@ -241,15 +195,13 @@ namespace Fireball_Dodger
             }
             else
             {
-
+                //Draw normal player sprite
                 spriteBatch.Draw(spriteSheet,
                         player, playerFrames.ElementAt<Rectangle>(currentFrame), Color.AliceBlue, 0f,
                         new Vector2(0), spriteDirection, 0f);
             }
-         
 
             spriteBatch.End();
-
 
 
             //Draw Gameover Box with Text
@@ -267,7 +219,7 @@ namespace Fireball_Dodger
             }
             else
             {
-                
+
             }
 
             base.Draw(gameTime);
@@ -303,6 +255,7 @@ namespace Fireball_Dodger
             }
             else
             {
+                //Turns off powerup and sets new random duration for next powerup
                 powerUpActive = false;
                 powerupTimer = randomPowerUpTime.Next(60 * 5, 90 * 5);
             }
@@ -332,7 +285,7 @@ namespace Fireball_Dodger
                     midJump = true;
                 }
 
-                
+
 
                 //move right
                 if (keyState.IsKeyDown(Keys.Right))
@@ -349,6 +302,7 @@ namespace Fireball_Dodger
                 }
 
                 /*
+                 * sliding movement ready to use for future
                 if (keyState.IsKeyDown(Keys.LeftAlt) && !midJump)
                 {
                     isSliding = true;
@@ -358,8 +312,8 @@ namespace Fireball_Dodger
                 }
                 */
 
-                //jump
-                if (keyState.IsKeyDown(Keys.Space) && midJump == false 
+                //handle jumping
+                if (keyState.IsKeyDown(Keys.Space) && midJump == false
                     && isSliding == false)
                 {
                     velocity.Y -= playerJump;
@@ -390,7 +344,8 @@ namespace Fireball_Dodger
                     player.X -= 5;
                 }
 
-                //Flip sprite
+
+                //Flip sprite direction
                 if (velocity.X < 0)
                 {
                     spriteDirection = SpriteEffects.FlipHorizontally;
@@ -401,48 +356,7 @@ namespace Fireball_Dodger
                     spriteDirection = SpriteEffects.None;
                 }
 
-
-
-                #region Legacy Animation Frame Logic (Old Warrior Spritesheet)
-                /*
-                if ((velocity.X != 0 && currentFrame < 7))
-                {
-                    currentFrame = 7;
-                }
-
-                if (velocity.X == 0)
-                {
-                    currentFrame = 0;
-                }
-
-                if (currentFrame < 10)
-                {
-
-                    frameDelay++;
-
-                    if (frameDelay > frameDelayCount)
-                    {
-                        frameDelay = 0;
-                        currentFrame++;
-                    }
-                }
-
-                else if (velocity.X != 0 && midJump == false)
-                {
-
-                    frameDelay++;
-
-                    if (frameDelay > frameDelayCount)
-                    {
-                        frameDelay = 0;
-                        currentFrame++;
-                    }
-                    if (currentFrame > 13)
-                        currentFrame = 5;
-                }
-                */
-                #endregion
-
+                //Animation Logic Region
                 #region New Animation Frame Logic (Adventurer Sheet)
 
 
@@ -451,9 +365,9 @@ namespace Fireball_Dodger
                     currentFrame = 4;
                 }
 
-         
 
-                 
+
+
 
                 if (velocity.X != 0 && currentFrame >= 8 && !midJump && !isSliding)
                 {
@@ -477,7 +391,7 @@ namespace Fireball_Dodger
                         currentFrame = 13;
                     }
 
-                   
+
                 }
 
                 if (isSliding)
@@ -491,7 +405,7 @@ namespace Fireball_Dodger
                         currentFrame = 9;
                     }
                     Console.WriteLine("Slide actiated");
-        
+
                 }
 
                 if (currentFrame < 20 && currentFrame != 9)
@@ -506,8 +420,8 @@ namespace Fireball_Dodger
                     }
                 }
 
-                
-                
+
+
                 #endregion
 
                 //Update Player position values

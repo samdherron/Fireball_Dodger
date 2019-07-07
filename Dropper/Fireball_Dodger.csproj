@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="Background.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="MovingBackground.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Powerup.cs" />
     <Compile Include="Primitives2D.cs" />

@@ -1,28 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
-//using C3.XNA;
 using System.Media;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.Xna.Framework.Content;
-//using Microsoft.Xna.Framework.GamerServices;
-//using Microsoft.Xna.Framework.Storage;
 using System.Xml.Serialization;
 using System.IO.IsolatedStorage;
 
 namespace Fireball_Dodger
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
+
     public class Game1 : Game
     {
         const int SCREENWIDTH = 1000;
@@ -62,17 +54,8 @@ namespace Fireball_Dodger
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
-
-
             Background b = new Background(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
             Components.Add(b);
-
-
-            /*
-            MovingBackground mb = new MovingBackground(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
-            Components.Add(mb);
-            */
 
             Player p = new Player(this, spriteBatch, Content, b);
             Components.Add(p);
@@ -80,15 +63,12 @@ namespace Fireball_Dodger
             Projectile proj1 = new Projectile(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
             Components.Add(proj1);
             projectileList.Add(proj1);
-            
 
             TitleScreen t = new TitleScreen(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
             Components.Add(t);
 
             Powerup powerUp = new Powerup(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
             Components.Add(powerUp);
-
-
 
         }
 
@@ -102,7 +82,7 @@ namespace Fireball_Dodger
 
             if (Player.newGame)
             {
-                //set up new game variables
+                //Set up new game variables
                 Player.player = new Rectangle(75, 330 - 64, Player.picSize * Player.scale, Player.picSize * Player.scale);
                 Player.spriteDirection = SpriteEffects.None;
                 Player.velocity = new Vector2(0, 0);
@@ -117,28 +97,7 @@ namespace Fireball_Dodger
                 Player.powerupTimer = 0;
             }
 
-            /*
-            if (spawnTimer > 500)
-            {
-
-                int randomNumProjectiles = rndNum.Next(1, 3);
-
-                for (int i = 0; i < randomNumProjectiles; i++)
-                {
-                    Projectile p = new Projectile(this, spriteBatch, Content, SCREENWIDTH, SCREENHEIGHT);
-                    Components.Add(p);
-                    projectileList.Add(p);
-                    Console.WriteLine("new projectile object instance");
-                }
-
-                spawnTimer = 0;
-            }
-
-            spawnTimer++;
-
-
-
-    */            base.Update(gameTime);
+            base.Update(gameTime);
         }
 
         /// <summary>

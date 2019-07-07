@@ -1,22 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Audio;
-//using C3.XNA;
-using System.Media;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-
 using Microsoft.Xna.Framework.Content;
-//using Microsoft.Xna.Framework.GamerServices;
-//using Microsoft.Xna.Framework.Storage;
-using System.Xml.Serialization;
-using System.IO.IsolatedStorage;
+
 
 namespace Fireball_Dodger
 {
@@ -25,6 +13,7 @@ namespace Fireball_Dodger
     /// </summary>
     public class TitleScreen : DrawableGameComponent
     {
+        #region Variables
         const int SCREENWIDTH = 1000;
         const int SCREENHEIGHT = 500;
         private SpriteBatch spriteBatch;
@@ -36,11 +25,8 @@ namespace Fireball_Dodger
         SpriteFont font;
         Rectangle speakerShape;
         Texture2D speakerImage;
-
         GraphicsDeviceManager graphics;
-
         Song backgroundSoundTrack;
-
         public static bool titleScreen;
         Texture2D titleScreenBG;
         private Texture2D flameDemonTitle;
@@ -53,6 +39,7 @@ namespace Fireball_Dodger
         private int darkenIncrement;
         private bool darkenImage = false;
         private Texture2D flameDemonOriginal;
+        #endregion
 
         public TitleScreen(Game game) : base(game)
         {
@@ -61,6 +48,7 @@ namespace Fireball_Dodger
 
         public TitleScreen(Game game, SpriteBatch spriteBatch, ContentManager content, int v1, int v2) : base(game)
         {
+            //Setup initial variables and title screen shapes
             this.spriteBatch = spriteBatch;
             this.content = content;
             this.v1 = v1;
@@ -72,6 +60,7 @@ namespace Fireball_Dodger
             LoadContent();
 
             /*
+             * Uncomment to turn music on
             MediaPlayer.Volume = 0.05f;
             MediaPlayer.Play(backgroundSoundTrack);
             */
@@ -97,7 +86,7 @@ namespace Fireball_Dodger
             base.LoadContent();
         }
 
-        
+
         public override void Update(GameTime gameTime)
         {
 
@@ -120,7 +109,7 @@ namespace Fireball_Dodger
 
 
 
-            /*
+
             if (MediaPlayer.State == MediaState.Stopped)
             {
                 MediaPlayer.Play(backgroundSoundTrack);
@@ -129,15 +118,16 @@ namespace Fireball_Dodger
             //Turns on and off music
             if (keyState.IsKeyDown(Keys.M))
             {
-                if (MediaPlayer.State == MediaState.Playing) {
+                if (MediaPlayer.State == MediaState.Playing)
+                {
                     MediaPlayer.Stop();
-                } else
+                }
+                else
                 {
                     MediaPlayer.Play(backgroundSoundTrack);
                 }
             }
-            */
-    
+
 
             base.Update(gameTime);
         }
@@ -161,18 +151,18 @@ namespace Fireball_Dodger
                 {
                     darkenTimer = 0;
 
-                   if (darkenIncrement == 0 || darkenImage == true)
+                    if (darkenIncrement == 0 || darkenImage == true)
                     {
                         darkenIncrement++;
                         darkenImage = true;
                     }
 
-                   if (darkenIncrement == 4 || darkenImage == false)
+                    if (darkenIncrement == 4 || darkenImage == false)
                     {
                         darkenImage = false;
                         darkenIncrement--;
                     }
-                    
+
                 }
 
 
@@ -197,7 +187,7 @@ namespace Fireball_Dodger
                 }
             }
 
-                    spriteBatch.End();
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

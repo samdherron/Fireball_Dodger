@@ -14,6 +14,7 @@ namespace Fireball_Dodger
 {
     class Projectile : DrawableGameComponent
     {
+        #region Variables
         private SpriteBatch spriteBatch;
         private ContentManager content;
         private int v1;
@@ -40,6 +41,7 @@ namespace Fireball_Dodger
         SoundEffect projectHit;
         SoundEffectInstance projectileHitInstance;
         Rectangle powerupFlare;
+        #endregion
 
         public Projectile(Game game) : base(game)
         {
@@ -48,6 +50,7 @@ namespace Fireball_Dodger
 
         public Projectile(Game game, SpriteBatch spriteBatch, ContentManager content, int v1, int v2) : base(game)
         {
+            //Setup initial variables and projectile rectangle
             this.spriteBatch = spriteBatch;
             this.content = content;
             this.v1 = v1;
@@ -66,6 +69,7 @@ namespace Fireball_Dodger
 
             if (Player.playerAlive)
             {
+                //Draws coordinates, projectiles fired (score) and the projectile itself
                 spriteBatch.DrawString(font, "Projectile Coordinates... X: " + projectileShape.X + " Y: " +
                 projectileShape.Y, new Vector2(360, 70), Color.Black);
                 spriteBatch.Draw(projectileImage, projectileShape, Color.White);
@@ -84,30 +88,27 @@ namespace Fireball_Dodger
 
             }
 
-            
+
 
             spriteBatch.End();
 
         }
 
-        
+
         public override void Update(GameTime gameTime)
         {
             velocity.X = 0;
             velocity.Y = 0;
 
-            // apply gravity to projectile (not sure yet)
-
-
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            //Apply Gravity to projectile randomly
             if (rndY.Next(1, 10) < 5 && projectileShape.X < 800)
             {
-                
                 velocity.Y += gravityVect.Y * deltaTime;
                 Console.WriteLine("Gravity down... velocity Y is " + velocity.Y);
             }
 
-            
+
 
 
             if (Player.playerAlive && !TitleScreen.titleScreen)
@@ -115,6 +116,7 @@ namespace Fireball_Dodger
 
                 if (projectileShape.Intersects(Player.player) && !Player.powerUpActive)
                 {
+                    //If projectile hits player, trigger death and play death sound
                     sendPlayerDeath();
                     projectileHitInstance.Play();
                 }
@@ -171,7 +173,6 @@ namespace Fireball_Dodger
                     velocity.X -= speed;
                     projectileImageReady = false;
                     bulletWaitFireCounter = 0;
-
                 }
 
                 projectileShape.X = projectileShape.X + (int)velocity.X;
@@ -236,7 +237,8 @@ namespace Fireball_Dodger
             if (energyNumber == 17)
             {
                 result = true;
-            } else
+            }
+            else
             {
                 result = false;
             }

@@ -13,6 +13,7 @@ namespace Fireball_Dodger
 {
     class Powerup : DrawableGameComponent
     {
+        #region Variables
         private SpriteBatch spriteBatch;
         private ContentManager content;
         private int v1;
@@ -38,6 +39,7 @@ namespace Fireball_Dodger
         string powerupTypeString;
         Rectangle powerupFlare;
         Texture2D powerupFlareImage;
+        #endregion
 
         public Powerup(Game game) : base(game)
         {
@@ -46,6 +48,7 @@ namespace Fireball_Dodger
 
         public Powerup(Game game, SpriteBatch spriteBatch, ContentManager content, int v1, int v2) : base(game)
         {
+            //Setup initial variables and powerup rectangles
             this.spriteBatch = spriteBatch;
             this.content = content;
             this.v1 = v1;
@@ -61,11 +64,13 @@ namespace Fireball_Dodger
         {
             spriteBatch.Begin();
 
+            //Draws powerup type and time left if active
             if (Player.powerUpActive && Player.playerAlive)
             {
                 spriteBatch.DrawString(font, "Powerup Left: " + Player.powerupTimer / 60, new Vector2(450, 50), Color.Black);
                 spriteBatch.DrawString(font, "Powerup Type: " + powerupTypeString, new Vector2(450, 120), Color.Black);
 
+                //Draws lava flare
                 if (powerupType == 1)
                 {
                     spriteBatch.Draw(powerupFlareImage, powerupFlare, Color.White);
@@ -117,15 +122,19 @@ namespace Fireball_Dodger
             if (Player.playerAlive && !TitleScreen.titleScreen)
             {
 
+                //Check for powerup hitting playering
                 if (powerupShape.Intersects(Player.player))
                 {
+                    //moves powerup out of sight and calls activation method
                     powerupShape.Y = 1500;
                     shieldPowerupActivate();
                 }
 
+                //checks if it's time to spawn a powerup
                 if (spawnTimer == 0)
                 {
                     spawnPowerup = true;
+                    //sets new random value to spawn timer
                     spawnTimer = rndSpawnCount.Next(60 * 15, 90 * 15);
                     Console.WriteLine("spawn timer value assigned");
                 }
@@ -196,7 +205,7 @@ namespace Fireball_Dodger
             _Lava
         }
 
-        
+
 
 
 
