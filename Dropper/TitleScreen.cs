@@ -59,11 +59,10 @@ namespace Fireball_Dodger
             speakerShape = new Rectangle(200, 30, 128 / 2, 128 / 2);
             LoadContent();
 
-            /*
-             * Uncomment to turn music on
+             
             MediaPlayer.Volume = 0.05f;
             MediaPlayer.Play(backgroundSoundTrack);
-            */
+           
         }
 
         /// <summary>
