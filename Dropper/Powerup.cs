@@ -38,7 +38,13 @@ namespace Fireball_Dodger
         public static int powerupType;
         string powerupTypeString;
         Rectangle powerupFlare;
-        Texture2D powerupFlareImage;
+        Texture2D powerupFlareImage1;
+        private int darkenTimer;
+        private int darkenIncrement;
+        private bool darkenImage;
+        private Texture2D powerupFlareImage2;
+        private Texture2D powerupFlareImage3;
+        private Texture2D powerupFlareImage4;
         #endregion
 
         public Powerup(Game game) : base(game)
@@ -73,7 +79,44 @@ namespace Fireball_Dodger
                 //Draws lava flare
                 if (powerupType == 1)
                 {
-                    spriteBatch.Draw(powerupFlareImage, powerupFlare, Color.White);
+                    darkenTimer++;
+
+                    //Waits for darkenTimer to increment to 3 before switch to darker image
+                    if (darkenTimer >= 10)
+                    {
+                        darkenTimer = 0;
+
+                        if (darkenIncrement == 0 || darkenImage == true)
+                        {
+                            darkenIncrement++;
+                            darkenImage = true;
+                        }
+
+                        if (darkenIncrement == 4 || darkenImage == false)
+                        {
+                            darkenImage = false;
+                            darkenIncrement--;
+                        }
+
+                    }
+
+
+                    //Switches flame demon texture depending on increment value
+                    switch (darkenIncrement)
+                    {
+                        case 0:
+                            spriteBatch.Draw(powerupFlareImage1, powerupFlare, Color.White);
+                            break;
+                        case 1:
+                            spriteBatch.Draw(powerupFlareImage2, powerupFlare, Color.White);
+                            break;
+                        case 2:
+                            spriteBatch.Draw(powerupFlareImage3, powerupFlare, Color.White);
+                            break;
+                        case 3:
+                            spriteBatch.Draw(powerupFlareImage4, powerupFlare, Color.White);
+                            break;
+                    }
                 }
             }
 
@@ -188,7 +231,10 @@ namespace Fireball_Dodger
         {
             shieldPowerupImage = content.Load<Texture2D>(@"Powerups\shieldPowerup");
             lavaPowerupImage = content.Load<Texture2D>(@"Powerups\lavapowerup");
-            powerupFlareImage = content.Load<Texture2D>(@"Powerups\lavaFlare");
+            powerupFlareImage1 = content.Load<Texture2D>(@"Powerups\lavaFlare");
+            powerupFlareImage2 = content.Load<Texture2D>(@"Powerups\lavaFlare2");
+            powerupFlareImage3 = content.Load<Texture2D>(@"Powerups\lavaFlare3");
+            powerupFlareImage4 = content.Load<Texture2D>(@"Powerups\lavaFlare4");
             font = content.Load<SpriteFont>("font");
             base.LoadContent();
         }

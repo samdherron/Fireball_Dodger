@@ -73,7 +73,7 @@ namespace Fireball_Dodger
                 darkenTimer++;
 
                 //Waits for darkenTimer to increment to 3 before switch to darker image
-                if (darkenTimer >= 3)
+                if (darkenTimer >= 4)
                 {
                     darkenTimer = 0;
 
