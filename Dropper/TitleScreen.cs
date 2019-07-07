@@ -116,12 +116,6 @@ namespace Fireball_Dodger
 
 
 
-
-            if (MediaPlayer.State == MediaState.Stopped)
-            {
-                MediaPlayer.Play(backgroundSoundTrack);
-            }
-
             //Turns on and off music
             if (keyState.IsKeyDown(Keys.M))
             {
@@ -153,6 +147,7 @@ namespace Fireball_Dodger
                 spriteBatch.Draw(characterImage,
                         characterShape, characterFrames.ElementAt<Rectangle>(0), Color.AliceBlue, 0f,
                         new Vector2(0), SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Press M for music toggle", new Vector2(10, 10), Color.White);
 
                 darkenTimer++;
 
