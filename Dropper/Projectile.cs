@@ -101,13 +101,15 @@ namespace Fireball_Dodger
             velocity.Y = 0;
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            
+            /*
             //Apply Gravity to projectile randomly
             if (rndY.Next(1, 10) < 5 && projectileShape.X < 800)
             {
                 velocity.Y += gravityVect.Y * deltaTime;
                 Console.WriteLine("Gravity down... velocity Y is " + velocity.Y);
             }
-
+                */
 
 
 

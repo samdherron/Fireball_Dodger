@@ -43,6 +43,7 @@ namespace Fireball_Dodger
         private bool darkenImage = false;
         private Texture2D flameDemonOriginal;
         List<Rectangle> characterFrames;
+        bool musicKeyStop;
         #endregion
 
         public TitleScreen(Game game) : base(game)
@@ -114,17 +115,27 @@ namespace Fireball_Dodger
                 Console.WriteLine("title screen set true");
             }
 
+            if (MediaPlayer.State == MediaState.Stopped)
+            {
+                if (!musicKeyStop)
+                {
+                    MediaPlayer.Play(backgroundSoundTrack);
+                }
+            }
 
-
+            
             //Turns on and off music
             if (keyState.IsKeyDown(Keys.M))
             {
+                
                 if (MediaPlayer.State == MediaState.Playing)
                 {
                     MediaPlayer.Stop();
+                    musicKeyStop = true;
                 }
                 else
                 {
+                    musicKeyStop = false;
                     MediaPlayer.Play(backgroundSoundTrack);
                 }
             }
@@ -147,7 +158,7 @@ namespace Fireball_Dodger
                 spriteBatch.Draw(characterImage,
                         characterShape, characterFrames.ElementAt<Rectangle>(0), Color.AliceBlue, 0f,
                         new Vector2(0), SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "Press M for music toggle", new Vector2(10, 10), Color.White);
+                
 
                 darkenTimer++;
 
@@ -192,6 +203,8 @@ namespace Fireball_Dodger
                 }
             }
 
+            //Draws music toggle message on death screen aswell by ignoring if statement above
+            spriteBatch.DrawString(font, "Press M for music toggle", new Vector2(10, 10), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
