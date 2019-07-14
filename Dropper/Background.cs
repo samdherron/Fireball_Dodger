@@ -49,7 +49,7 @@ namespace Fireball_Dodger
             this.content = content;
             this.v1 = v1;
             this.v2 = v2;
-            floorBounds = new Rectangle(0, 400, 1000, 0);
+            floorBounds = new Rectangle(0, 412, 1000, 0);
             rightBounds = new Rectangle(998, 100, 1, 5000);
             leftBounds = new Rectangle(1, 100, 1, 5000);
             screenMover = new Rectangle(750, 329, 1, 1);
