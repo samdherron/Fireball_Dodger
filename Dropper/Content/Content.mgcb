@@ -326,11 +326,29 @@
 /processorParam:Quality=Best
 /build:Sound/deathNoise.mp3
 
+#begin Sound/energyWave.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/energyWave.mp3
+
+#begin Sound/energyWave_bitCrush.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/energyWave_bitCrush.mp3
+
 #begin Sound/landNoise.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/landNoise.wav
+
+#begin Sound/rockPowerupHitSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/rockPowerupHitSound.mp3
 
 #begin Sound/soundtrack_title.wav
 /importer:WavImporter
