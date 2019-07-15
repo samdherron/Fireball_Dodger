@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using C3.XNA;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Fireball_Dodger
 {
@@ -39,8 +33,14 @@ namespace Fireball_Dodger
         public static bool multiSpawn;
         int multiCounter = 0;
         SoundEffect projectHit;
+        private SoundEffect projectHitPowerup;
         SoundEffectInstance projectileHitInstance;
+        private SoundEffect energyHitPowerup;
+        SoundEffectInstance energyHitInstance;
+        private SoundEffect energy2HitPowerup;
+        SoundEffectInstance energy2HitInstance;
         Rectangle powerupFlare;
+        SoundEffectInstance projectHitPowerupInstance;
         #endregion
 
         public Projectile(Game game) : base(game)
@@ -86,6 +86,8 @@ namespace Fireball_Dodger
                     spriteBatch.Draw(projectileEnergy, projectileShape, Color.White);
                 }
 
+
+
             }
 
 
@@ -101,7 +103,7 @@ namespace Fireball_Dodger
             velocity.Y = 0;
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            
+
             /*
             //Apply Gravity to projectile randomly
             if (rndY.Next(1, 10) < 5 && projectileShape.X < 800)
@@ -121,7 +123,22 @@ namespace Fireball_Dodger
                     //If projectile hits player, trigger death and play death sound
                     sendPlayerDeath();
                     projectileHitInstance.Play();
+
                 }
+                else if (projectileShape.Intersects(Player.player) && Player.powerUpActive)
+                {
+                    if (energyProjectile)
+                    {
+                        energy2HitInstance.Play();
+                    }
+                    else
+                    {
+                        projectHitPowerupInstance.Play();
+                    }
+                }
+
+
+
 
                 if (projectileShape.X < rndSpawnX.Next(-200, -50))
                 {
@@ -192,11 +209,18 @@ namespace Fireball_Dodger
             projectileEnergy = content.Load<Texture2D>("energy");
             font = content.Load<SpriteFont>("font");
             projectHit = content.Load<SoundEffect>(@"Sound\deathNoise");
+            projectHitPowerup = content.Load<SoundEffect>(@"Sound\rockPowerupHitSound");
+            energyHitPowerup = content.Load<SoundEffect>(@"Sound\energyWave_bitCrush");
             base.LoadContent();
 
             //Setting up death sound effect instance
             projectileHitInstance = projectHit.CreateInstance();
             projectileHitInstance.Volume = 0.05f;
+            projectHitPowerupInstance = projectHitPowerup.CreateInstance();
+            projectHitPowerupInstance.Volume = 0.25f;
+            projectHitPowerupInstance.Pitch = 0.3f;
+            energyHitInstance = energyHitPowerup.CreateInstance();
+            energyHitInstance.Volume = 0.40f;
         }
 
 
