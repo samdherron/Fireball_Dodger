@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Fireball_Dodger
 {
@@ -18,7 +19,7 @@ namespace Fireball_Dodger
         Random rndColor = new Random();
         Random rndSpawnX = new Random();
         const float gravity = 0.06f;
-        public static float speed = 9.7f;
+        public static float speed = 7.7f;
         Vector2 gravityVect = new Vector2(0, gravity);
         Random rndY = new Random();
         SpriteFont font;
@@ -102,6 +103,7 @@ namespace Fireball_Dodger
             velocity.X = 0;
             velocity.Y = 0;
 
+
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             /*
@@ -149,6 +151,18 @@ namespace Fireball_Dodger
                     Console.WriteLine("new random Y projectile value: " + projectileShape.Y);
                     projectilesFired++;
 
+                    //Gets either div2 or div3 for the projectile size
+                    if (projectileSizeRandomizer(rndColor) == "div2")
+                    {
+                        projectileShape.Width = (512 / 2);
+                        projectileShape.Height = (197 / 2);
+                    }
+                    else
+                    {
+                        projectileShape.Width = (512 / 3);
+                        projectileShape.Height = (197 / 3);
+                    }
+
                     //See EnergyRandomRoll method
                     if (energyProjectile)
                     {
@@ -164,12 +178,14 @@ namespace Fireball_Dodger
 
                 multiSpawn = multiSpawner(projectileShape, rndSpawnX);
 
+                /*
                 if (multiSpawn && multiCounter > 30)
                 {
                     Console.WriteLine("projectile Spawned");
                     Projectile p1 = new Projectile(Game);
                     multiCounter = 0;
-                }
+                } 
+                */
 
                 if (velocity.X == 0)
                 {
@@ -195,7 +211,25 @@ namespace Fireball_Dodger
                 }
 
                 projectileShape.X = projectileShape.X + (int)velocity.X;
-                projectileShape.Y = projectileShape.Y + (int)velocity.Y;
+
+                if (projectileShape.Intersects(Player.player) && Player.powerUpActive)
+                {
+                    if (rndColor.Next(0, 1) == 0)
+                    {
+                        velocity.Y += (gravityVect.Y * deltaTime * 15);
+                    }
+                    else
+                    {
+                        velocity.Y -= (gravityVect.Y * deltaTime * 15);
+                    }
+                    projectileShape.Y = projectileShape.Y + (int)velocity.Y;
+                }
+                else
+                {
+
+                    projectileShape.Y = projectileShape.Y + (int)velocity.Y;
+                }
+
                 bulletWaitFireCounter++;
 
                 projectileShape.X -= rndSpawnX.Next(0, 15);
@@ -272,6 +306,20 @@ namespace Fireball_Dodger
             return result;
         }
 
+        private string projectileSizeRandomizer(Random rnd)
+        {
+            string result;
+
+            if (rnd.Next(0, 2) == 0)
+            {
+                result = "div2";
+            } else
+            {
+                result = "div3";
+            }
+
+            return result;
+        }
 
 
     }
