@@ -129,7 +129,7 @@ namespace Fireball_Dodger
                 {
                     if (energyProjectile)
                     {
-                        energy2HitInstance.Play();
+                        energyHitInstance.Play();
                     }
                     else
                     {
