@@ -173,6 +173,7 @@ namespace Fireball_Dodger
         {
             spriteBatch.Begin();
 
+
             //Determine whether to display Coloured Sprite or Normal Sprite
             if (powerUpActive)
             {
@@ -201,6 +202,7 @@ namespace Fireball_Dodger
                         new Vector2(0), spriteDirection, 0f);
             }
 
+            //spriteBatch.FillRectangle(player, Color.Blue);
             spriteBatch.End();
 
 
@@ -233,6 +235,7 @@ namespace Fireball_Dodger
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            player.Height = picSize * scale;
 
             if (powerupTimer >= 0 && powerUpActive)
             {
@@ -283,6 +286,11 @@ namespace Fireball_Dodger
                 else if (velocity.Y != 0)
                 {
                     midJump = true;
+
+                    if (currentFrame > 14 && currentFrame < 19)
+                    {
+                        player.Height = (picSize * scale) - 32;
+                    }
                 }
 
 
@@ -357,18 +365,18 @@ namespace Fireball_Dodger
                 }
 
                 //Animation Logic Region
-                #region New Animation Frame Logic (Adventurer Sheet)
+                #region Animation Frame Logic (Adventurer Sheet)
 
+                
 
+                //Switch to running frame
                 if ((velocity.X != 0 && currentFrame < 4))
                 {
                     currentFrame = 4;
                 }
 
 
-
-
-
+                //Cycle Back to Starting running frame
                 if (velocity.X != 0 && currentFrame >= 8 && !midJump && !isSliding)
                 {
                     currentFrame = 4;
@@ -376,6 +384,7 @@ namespace Fireball_Dodger
 
                 if (velocity.X == 0 && !midJump && !isSliding)
                 {
+                    //Standing still frames
                     if (currentFrame >= 3)
                     {
                         currentFrame = 0;
@@ -386,14 +395,15 @@ namespace Fireball_Dodger
 
                 if (midJump)
                 {
+                    
                     if (currentFrame < 13)
                     {
                         currentFrame = 13;
                     }
 
-
                 }
 
+                /*
                 if (isSliding)
                 {
                     if (currentFrame < 9 || currentFrame > 12)
@@ -407,6 +417,7 @@ namespace Fireball_Dodger
                     Console.WriteLine("Slide actiated");
 
                 }
+                */
 
                 if (currentFrame < 20 && currentFrame != 9)
                 {
