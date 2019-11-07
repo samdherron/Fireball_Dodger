@@ -9,8 +9,8 @@
     <ProjectGuid>{0409F8BA-F5B9-48E1-8E55-C94883957E70}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dropper</RootNamespace>
-    <AssemblyName>Dropper</AssemblyName>
+    <RootNamespace>Fireball_Dodger</RootNamespace>
+    <AssemblyName>Fireball_Dodger</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
