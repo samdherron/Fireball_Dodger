@@ -199,7 +199,18 @@ namespace Fireball_Dodger
                     projectileShape.X = 900;
                     projectileShape.Y = rndY.Next(100, 300);
                     Console.WriteLine("new random Y projectile value: " + projectileShape.Y);
-                    projectilesFired++;
+
+
+                    //Checks if lava powerup is active.
+                    //If positive, increment by 2. If negative, normal increment of 1.
+                    if (Player.powerUpActive && Powerup.powerupType == 1)
+                    {
+                        projectilesFired += 2;
+                    }
+                    else
+                    {
+                        projectilesFired++;
+                    }
 
                     //See EnergyRandomRoll method
                     if (energyProjectile)
