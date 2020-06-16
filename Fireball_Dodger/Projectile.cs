@@ -24,24 +24,22 @@ namespace Fireball_Dodger
         Random rndY = new Random();
         SpriteFont font;
         int bulletWaitFireCounter = 5;
-        bool bulletInFlight;
+        bool FireballInFlight;
         bool energyProjectile = false;
         Random energyRoll = new Random();
         public static Rectangle projectileShape;
         public static bool projectileImageReady;
         public static Vector2 velocity;
         public static int projectilesFired; //score count
-        public static bool multiSpawn;
-        int multiCounter = 0;
+
         SoundEffect projectHit;
-        private SoundEffect projectHitPowerup;
+        private SoundEffect projectHitRockPowerup;
+        SoundEffectInstance projectHitRockPowerupInstance;
+        private SoundEffect projectHitLavaPowerup;
+        SoundEffectInstance projectHitLavaPowerupInstance;
         SoundEffectInstance projectileHitInstance;
         private SoundEffect energyHitPowerup;
         SoundEffectInstance energyHitInstance;
-        private SoundEffect energy2HitPowerup;
-        SoundEffectInstance energy2HitInstance;
-        Rectangle powerupFlare;
-        SoundEffectInstance projectHitPowerupInstance;
         private int frameTimer;
         private Texture2D projectileImage2;
         private Texture2D projectileImage3;
@@ -72,7 +70,6 @@ namespace Fireball_Dodger
         public override void Draw(GameTime gameTime)
         {
 
-
             spriteBatch.Begin();
 
             if (Player.playerAlive)
@@ -96,27 +93,11 @@ namespace Fireball_Dodger
 
                 frameTimer++;
 
-                //Waits for darkenTimer to increment to 3 before switch to darker image
-                if (frameTimer >= 10)
-                {
-                    frameTimer = 0;
-
-                    if (frameIncrement == 0 || changeImage == true)
-                    {
-                        frameIncrement++;
-                        changeImage = true;
-                    }
-
-                    if (frameIncrement == 4 || changeImage == false)
-                    {
-                        changeImage = false;
-                        frameIncrement--;
-                    }
-
-                }
+                //Will change the frame increment to draw the different frames.
+                AnimationHandler();
 
 
-                //Switches flame demon texture depending on increment value
+                //Switches flame demon texture depending on increment value.
                 switch (frameIncrement)
                 {
                     case 0:
@@ -137,119 +118,51 @@ namespace Fireball_Dodger
                 }
             }
 
-
-
-        
-
-
-
             spriteBatch.End();
 
         }
 
+        private void AnimationHandler()
+        {
+            //Waits for darkenTimer to increment to 3 before switch to darker image
+            if (frameTimer >= 10)
+            {
+                frameTimer = 0;
+
+                if (frameIncrement == 0 || changeImage == true)
+                {
+                    frameIncrement++;
+                    changeImage = true;
+                }
+
+                if (frameIncrement == 4 || changeImage == false)
+                {
+                    changeImage = false;
+                    frameIncrement--;
+                }
+
+            }
+        }
 
         public override void Update(GameTime gameTime)
         {
-            velocity.X = 0;
-            velocity.Y = 0;
-
-
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            /*
-            //Apply Gravity to projectile randomly
-            if (rndY.Next(1, 10) < 5 && projectileShape.X < 800)
-            {
-                velocity.Y += gravityVect.Y * deltaTime;
-                Console.WriteLine("Gravity down... velocity Y is " + velocity.Y);
-            }
-                */
-
-
+            //Reset frame variables
+            float deltaTime = InitializeFrame(gameTime); 
 
             if (Player.playerAlive && !TitleScreen.titleScreen)
             {
 
-                if (projectileShape.Intersects(Player.player) && !Player.powerUpActive)
-                {
-                    //If projectile hits player, trigger death and play death sound
-                    sendPlayerDeath();
-                    projectileHitInstance.Play();
+                CheckCollsion_Player();
 
-                }
-                else if (projectileShape.Intersects(Player.player) && Player.powerUpActive)
-                {
-                    if (energyProjectile)
-                    {
-                        energyHitInstance.Play();
-                    }
-                    else
-                    {
-                        projectHitPowerupInstance.Play();
-                    }
-                }
+                Check_ProjectileSpawn();
 
+                FireballInFlight = Check_FireballInFlight();
+                
 
-
-
-                if (projectileShape.X < rndSpawnX.Next(-200, -50))
-                {
-                    //Any spawn after the first will use these values
-                    velocity.X = 0;
-                    projectileShape.X = 900;
-                    projectileShape.Y = rndY.Next(100, 300);
-                    Console.WriteLine("new random Y projectile value: " + projectileShape.Y);
-
-
-                    //Checks if lava powerup is active.
-                    //If positive, increment by 2. If negative, normal increment of 1.
-                    if (Player.powerUpActive && Powerup.powerupType == 1)
-                    {
-                        projectilesFired += 2;
-                    }
-                    else
-                    {
-                        projectilesFired++;
-                    }
-
-                    //See EnergyRandomRoll method
-                    if (energyProjectile)
-                    {
-                        projectilesFired--; //subtracts the incremented amount from the fireball
-                        projectilesFired += 3; //adds 3 points instead of 1 as a bonus
-                        energyProjectile = false;
-                    }
-
-                    //Gets either div2 or div3 for the projectile size
-                    if (projectileSizeRandomizer(rndColor) == "div2")
-                    {
-                        projectileShape.Width = (512 / 2);
-                        projectileShape.Height = (197 / 2);
-                    }
-                    else
-                    {
-                        projectileShape.Width = (512 / 3);
-                        projectileShape.Height = (197 / 3);
-                    }
-
-                    
-
-                }
-  
-
-                if (velocity.X == 0)
-                {
-                    bulletInFlight = false;
-                }
-                else
-                {
-                    bulletInFlight = true;
-                }
-
-                if (!bulletInFlight)
+                if (!FireballInFlight)
                 {
                     projectileImageReady = true;
-                    Console.WriteLine("bullet ready to fire");
+                    Console.WriteLine("Fireball ready to fire");
                 }
 
                 if (projectileImageReady)
@@ -287,6 +200,102 @@ namespace Fireball_Dodger
             base.Update(gameTime);
         }
 
+        //Resets velocity and processes the gametime.
+        private float InitializeFrame(GameTime gameTime)
+        {
+            velocity.X = 0;
+            velocity.Y = 0;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            return deltaTime;
+        }
+
+        private bool Check_FireballInFlight()
+        {
+            bool InFlight = true;
+
+            if (velocity.X == 0)
+            {
+                InFlight = false;
+            }
+            else
+            {
+                InFlight = true;
+            }
+
+            return InFlight;
+        }
+
+        //Will handle spawning of a new projectile if the current location is off screen.
+        //Also updates the game score based on the projectile count.
+        private void Check_ProjectileSpawn()
+        {
+            if (projectileShape.X < rndSpawnX.Next(-200, -50))
+            {
+                //Any spawn after the first will use these values
+                velocity.X = 0;
+                projectileShape.X = 900;
+                projectileShape.Y = rndY.Next(100, 300);
+                Console.WriteLine("new random Y projectile value: " + projectileShape.Y);
+
+
+                //Checks if lava powerup is active.
+                //If positive, increment by 2. If negative, normal increment of 1.
+                projectilesFired = scoreUpdate(projectilesFired);
+
+
+                //Randomly rolls
+                if (energyProjectile)
+                {
+                    projectilesFired--; //subtracts the incremented amount from the fireball
+                    projectilesFired += 3; //adds 3 points instead of 1 as a bonus
+                    energyProjectile = false;
+                }
+
+                //Gets either div2 or div3 for the projectile size
+                if (projectileSizeRandomizer(rndColor) == "div2")
+                {
+                    projectileShape.Width = (512 / 2);
+                    projectileShape.Height = (197 / 2);
+                }
+                else
+                {
+                    projectileShape.Width = (512 / 3);
+                    projectileShape.Height = (197 / 3);
+                }
+
+
+
+            }
+        }
+
+        //Checks for player collision and handles player death & various sfx.
+        private void CheckCollsion_Player()
+        {
+            if (projectileShape.Intersects(Player.player) && !Player.powerUpActive)
+            {
+                //If projectile hits player, trigger death and play death sound
+                sendPlayerDeath();
+                projectileHitInstance.Play();
+
+            }
+            else if (projectileShape.Intersects(Player.player) && Player.powerUpActive)
+            {
+                if (energyProjectile)
+                {
+                    energyHitInstance.Play();
+                }
+                else if (Powerup.powerupType == 1)
+                {
+                    projectHitLavaPowerupInstance.Play();
+                }
+                else
+                {
+                    projectHitRockPowerupInstance.Play();
+                }
+            }
+        }
+
         protected override void LoadContent()
         {            
             projectileImage1 = content.Load<Texture2D>(@"Fire_V3\fire_v3_1");
@@ -297,16 +306,19 @@ namespace Fireball_Dodger
             projectileEnergy = content.Load<Texture2D>("energy");
             font = content.Load<SpriteFont>("font");
             projectHit = content.Load<SoundEffect>(@"Sound\deathNoise");
-            projectHitPowerup = content.Load<SoundEffect>(@"Sound\rockPowerupHitSound");
+            projectHitRockPowerup = content.Load<SoundEffect>(@"Sound\rockPowerupHitSound");
+            projectHitLavaPowerup = content.Load<SoundEffect>(@"Sound\lavaHit2");
             energyHitPowerup = content.Load<SoundEffect>(@"Sound\energyWave_bitCrush");
             base.LoadContent();
 
             //Setting up death sound effect instance
             projectileHitInstance = projectHit.CreateInstance();
             projectileHitInstance.Volume = 0.05f;
-            projectHitPowerupInstance = projectHitPowerup.CreateInstance();
-            projectHitPowerupInstance.Volume = 0.25f;
-            projectHitPowerupInstance.Pitch = 0.3f;
+            projectHitRockPowerupInstance = projectHitRockPowerup.CreateInstance();
+            projectHitRockPowerupInstance.Volume = 0.25f;
+            projectHitRockPowerupInstance.Pitch = 0.3f;
+            projectHitLavaPowerupInstance = projectHitLavaPowerup.CreateInstance();
+            projectHitLavaPowerupInstance.Volume = 0.5f;
             energyHitInstance = energyHitPowerup.CreateInstance();
             energyHitInstance.Volume = 0.40f;
         }
@@ -356,6 +368,22 @@ namespace Fireball_Dodger
             }
 
             return result;
+        }
+
+        private int scoreUpdate(int currentScore)
+        {
+            int newScore = currentScore;
+
+            if (Player.powerUpActive && Powerup.powerupType == 1)
+            {
+                newScore += 2;
+            }
+            else
+            {
+                newScore++;
+            }
+
+            return newScore;
         }
 
 
