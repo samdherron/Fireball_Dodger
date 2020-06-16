@@ -21,9 +21,12 @@ namespace Fireball_Dodger
         private ContentManager content;
         private int v1;
         private int v2;
+        int screenWidth;
+        int screenHeight;
         SpriteFont font;
         Rectangle speakerShape;
         Texture2D speakerImage;
+        GraphicsDeviceManager graphics;
         Song backgroundSoundTrack;
         public static bool titleScreen;
         Texture2D titleScreenBG;
@@ -97,8 +100,20 @@ namespace Fireball_Dodger
 
             KeyboardState keyState = Keyboard.GetState();
 
-            //Handles keyboard inputs.
-            KeyHandler(keyState);
+            //Enters into game
+            if (keyState.IsKeyDown(Keys.Enter))
+            {
+                titleScreen = false;
+                Console.WriteLine("title screen set false");
+            }
+
+
+            //Returns to title screen
+            if (keyState.IsKeyDown(Keys.Escape))
+            {
+                titleScreen = true;
+                Console.WriteLine("title screen set true");
+            }
 
             if (MediaPlayer.State == MediaState.Stopped)
             {
@@ -108,31 +123,11 @@ namespace Fireball_Dodger
                 }
             }
 
-            base.Update(gameTime);
-        }
-
-        //Handles keyboard input throughout application
-        private void KeyHandler(KeyboardState _keyState)
-        {
-            //Enters into game
-            if (_keyState.IsKeyDown(Keys.Enter))
-            {
-                titleScreen = false;
-                Console.WriteLine("title screen set false");
-            }
-
-
-            //Returns to title screen
-            if (_keyState.IsKeyDown(Keys.Escape))
-            {
-                titleScreen = true;
-                Console.WriteLine("title screen set true");
-            }
-
+            
             //Turns on and off music
-            if (_keyState.IsKeyDown(Keys.M))
+            if (keyState.IsKeyDown(Keys.M))
             {
-
+                
                 if (MediaPlayer.State == MediaState.Playing)
                 {
                     MediaPlayer.Stop();
@@ -144,7 +139,11 @@ namespace Fireball_Dodger
                     MediaPlayer.Play(backgroundSoundTrack);
                 }
             }
+
+
+            base.Update(gameTime);
         }
+
 
         public override void Draw(GameTime gameTime)
         {

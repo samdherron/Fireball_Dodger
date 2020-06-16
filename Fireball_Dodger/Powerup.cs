@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using C3.XNA;
-using Microsoft.Xna.Framework.Audio;
 
 namespace Fireball_Dodger
 {
@@ -46,8 +45,6 @@ namespace Fireball_Dodger
         private Texture2D powerupFlareImage2;
         private Texture2D powerupFlareImage3;
         private Texture2D powerupFlareImage4;
-        private SoundEffect lavaPowerupActivate;
-        SoundEffectInstance lavaPowerupActivateInstance;
         #endregion
 
         public Powerup(Game game) : base(game)
@@ -146,18 +143,25 @@ namespace Fireball_Dodger
             powerupFlare.Y = Player.player.Y;
             velocity.X = 0;
 
+
             if (Player.playerAlive && !TitleScreen.titleScreen)
             {
 
-                CheckCollision_Player();
+                //Check for powerup hitting playering
+                if (powerupShape.Intersects(Player.player))
+                {
+                    //moves powerup out of sight and calls activation method
+                    powerupShape.Y = 1500;
+                    shieldPowerupActivate();
+                }
 
-                //Checks if it's time to spawn a new powerup
+                //checks if it's time to spawn a powerup
                 if (spawnTimer == 0)
                 {
                     spawnPowerup = true;
-                    //Sets new random value to spawn timer.
+                    //sets new random value to spawn timer
                     spawnTimer = rndSpawnCount.Next(60 * 15, 90 * 15);
-                    Console.WriteLine("Spawn timer value assigned: " + spawnTimer);
+                    Console.WriteLine("spawn timer value assigned");
                 }
                 else
                 {
@@ -189,7 +193,6 @@ namespace Fireball_Dodger
                 //adds speed to the powerup so it falls
                 if (powerupImageReady)
                 {
-                    velocity.Y = 0;
                     velocity.Y += speed;
                     powerupImageReady = false;
                 }
@@ -203,9 +206,6 @@ namespace Fireball_Dodger
 
         protected override void LoadContent()
         {
-            lavaPowerupActivate = content.Load<SoundEffect>(@"Sound\lavaPowerupActivate");
-            lavaPowerupActivateInstance = lavaPowerupActivate.CreateInstance();
-            lavaPowerupActivateInstance.Volume = 0.25f;
             shieldPowerupImage = content.Load<Texture2D>(@"Powerups\shieldPowerup");
             lavaPowerupImage = content.Load<Texture2D>(@"Powerups\lavapowerup");
             powerupFlareImage1 = content.Load<Texture2D>(@"Powerups\lavaFlare");
@@ -214,19 +214,6 @@ namespace Fireball_Dodger
             powerupFlareImage4 = content.Load<Texture2D>(@"Powerups\lavaFlare4");
             font = content.Load<SpriteFont>("font");
             base.LoadContent();
-        }
-
-        //Checks each frame to see if 
-        public void CheckCollision_Player()
-        {
-        
-            if (powerupShape.Intersects(Player.player))
-            {
-                //Moves powerup out of sight and calls activation methods
-                powerupShape.Y = 1500;
-                shieldPowerupActivate();
-                powerupActivationSound(powerupType);
-            }
         }
 
         //Sets bool in Player class to signal powerup is active
@@ -243,21 +230,11 @@ namespace Fireball_Dodger
 
 
 
-        public void powerupActivationSound(int powerupType)
-        {
 
-            switch (powerupType)
-            {
-                case 1:
-                    lavaPowerupActivateInstance.Play();
-                    break;
 
-                case 2:
-                    lavaPowerupActivateInstance.Play();
-                    break;
-            }
 
-        }
+
+
 
     }
 }
