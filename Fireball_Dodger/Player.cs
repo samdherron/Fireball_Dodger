@@ -230,13 +230,193 @@ namespace Fireball_Dodger
 
         public override void Update(GameTime gameTime)
         {
+
             KeyboardState keyState = Keyboard.GetState();
-            velocity.X = 0;      //motionless for constant speed
 
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            float deltaTime = FrameReset(gameTime);
 
-            player.Height = picSize * scale;
 
+            if (playerAlive == true && !TitleScreen.titleScreen)
+            {
+                PowerupHandler();
+
+                KeyHandler(keyState);
+
+                midJump = Check_PlayerJumping();
+
+                Rectangle proposedPlayer = new Rectangle(player.X + (int)velocity.X,
+                                                   player.Y + (int)velocity.Y,
+                                                   player.Width,
+                                                   player.Height);
+
+                //Gravity application
+                velocity.Y += gravityVect.Y * deltaTime;
+
+                //Checks bounds & player position to prevent walking or jumping offscreen
+                Check_BoundsIntersection();
+
+                //Flip sprite direction based on movement
+                SpriteDirectionHandler();
+
+                //Orchestrates player animation & changing frames based on movement
+                AnimationHandler();
+
+
+                /*
+                if (isSliding)
+                {
+                    if (currentFrame < 9 || currentFrame > 12)
+                    {
+                        currentFrame = 9;
+                    }
+                    if (currentFrame == 12)
+                    {
+                        currentFrame = 9;
+                    }
+                    Console.WriteLine("Slide actiated");
+
+                }
+                */
+
+
+                //Update Player position values
+                player.X = player.X + (int)velocity.X;
+                player.Y = player.Y + (int)velocity.Y;
+
+                base.Update(gameTime);
+            }
+
+        }
+
+        private void AnimationHandler()
+        {
+            //Switch to running frame
+            if ((velocity.X != 0 && currentFrame < 4))
+            {
+                currentFrame = 4;
+            }
+
+            //Cycle Back to initial running frame
+            if (velocity.X != 0 && currentFrame >= 8 && !midJump && !isSliding)
+            {
+                currentFrame = 4;
+            }
+
+            //Standing still frames
+            if (velocity.X == 0 && !midJump && !isSliding)
+            {
+                
+                if (currentFrame >= 3)
+                {
+                    currentFrame = 0;
+                }
+            }
+
+            //Sets frames for jumping.
+            if (midJump)
+            {
+
+                if (currentFrame < 13)
+                {
+                    currentFrame = 13;
+                }
+
+            }
+
+            /*
+            * Sliding will be added soon.
+           if (keyState.IsKeyDown(Keys.LeftAlt) && !midJump)
+           {
+               isSliding = true;
+           } else
+           {
+               isSliding = false;
+           }
+           */
+
+            Check_MaxFrames();
+
+        }
+
+        private void Check_MaxFrames()
+        {
+
+            //Checks if the final animation frame has been reached.
+            if (currentFrame < 20 && currentFrame != 9)
+            {
+                frameDelay++;
+
+                if (frameDelay > frameDelayCount)
+                {
+                    frameDelay = 0;
+                    currentFrame++;
+                }
+            }
+        }
+
+        /*Changes the direction of the player sprite
+          based on walking left & right.    */
+        private void SpriteDirectionHandler()
+        {
+            
+            if (velocity.X < 0)
+            {
+                spriteDirection = SpriteEffects.FlipHorizontally;
+            }
+
+            else if (velocity.X > 0)
+            {
+                spriteDirection = SpriteEffects.None;
+            }
+        }
+
+        private void Check_BoundsIntersection()
+        {
+            //Stopping at left and right sides of screen
+            if (player.Intersects(Background.leftBounds))
+            {
+                velocity.X = 0;
+                player.X += 1;
+            }
+
+            if (player.Intersects(Background.rightBounds))
+            {
+                velocity.X = 0;
+                player.X -= 5;
+            }
+
+        }
+
+        private bool Check_PlayerJumping()
+        {
+            //Check if player is hitting floor, if so set velocity to 0
+            if (player.Intersects(Background.floorBounds))
+            {
+                velocity.Y = 0;
+                midJump = false;
+            }
+            else if (velocity.Y != 0)
+            {
+                midJump = true;
+
+                ShrinkPlayer_JumpingSize();
+            }
+
+            return midJump;
+        }
+
+        //Calculates a new height based on which jumping frame is active.
+        private void ShrinkPlayer_JumpingSize()
+        {
+            if (currentFrame > 14 && currentFrame < 19)
+            {
+                player.Height = (picSize * scale) - 32;
+            }
+
+        }
+
+        private void PowerupHandler()
+        {
             if (powerupTimer >= 0 && powerUpActive)
             {
                 switch (Powerup.powerupType)
@@ -262,188 +442,62 @@ namespace Fireball_Dodger
                 powerUpActive = false;
                 powerupTimer = randomPowerUpTime.Next(60 * 5, 90 * 5);
             }
+        }
 
+        private void KeyHandler(KeyboardState keyState)
+        {
 
+            //Move right
+            if (keyState.IsKeyDown(Keys.Right))
+            {
+                velocity.X = +speed;
 
-            //Starts new round
+            }
+
+            //Move left
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                velocity.X = -speed;
+
+            }
+
+            //Starts new round if player has died
             if (!playerAlive)
             {
-                keyState = Keyboard.GetState();
                 if (keyState.IsKeyDown(Keys.Enter))
                 {
                     newGame = true;
                 }
             }
 
-            if (playerAlive == true && !TitleScreen.titleScreen)
+            if (keyState.IsKeyDown(Keys.Space) && midJump == false
+                   && isSliding == false)
             {
-                //check if player is hitting floor, if so set velocity to 0
-                if (player.Intersects(Background.floorBounds))
-                {
-                    velocity.Y = 0;
-                    midJump = false;
-                }
-                else if (velocity.Y != 0)
-                {
-                    midJump = true;
-
-                    if (currentFrame > 14 && currentFrame < 19)
-                    {
-                        player.Height = (picSize * scale) - 32;
-                    }
-                }
-
-
-
-                //move right
-                if (keyState.IsKeyDown(Keys.Right))
-                {
-                    velocity.X = +speed;
-
-                }
-
-                //move left
-                if (keyState.IsKeyDown(Keys.Left))
-                {
-                    velocity.X = -speed;
-
-                }
-
-                /*
-                 * sliding movement ready to use for future
-                if (keyState.IsKeyDown(Keys.LeftAlt) && !midJump)
-                {
-                    isSliding = true;
-                } else
-                {
-                    isSliding = false;
-                }
-                */
-
-                //handle jumping
-                if (keyState.IsKeyDown(Keys.Space) && midJump == false
-                    && isSliding == false)
-                {
-                    velocity.Y -= playerJump;
-                    landInstance.Play();
-                }
-
-
-
-                Rectangle proposedPlayer = new Rectangle(player.X + (int)velocity.X,
-                                                   player.Y + (int)velocity.Y,
-                                                   player.Width,
-                                                   player.Height);
-
-                //Gravity application
-                velocity.Y += gravityVect.Y * deltaTime;
-
-
-                //Stopping at left and right sides of screen
-                if (player.Intersects(Background.leftBounds))
-                {
-                    velocity.X = 0;
-                    player.X += 1;
-                }
-
-                if (player.Intersects(Background.rightBounds))
-                {
-                    velocity.X = 0;
-                    player.X -= 5;
-                }
-
-
-                //Flip sprite direction
-                if (velocity.X < 0)
-                {
-                    spriteDirection = SpriteEffects.FlipHorizontally;
-                }
-
-                else if (velocity.X > 0)
-                {
-                    spriteDirection = SpriteEffects.None;
-                }
-
-                //Animation Logic Region
-                #region Animation Frame Logic (Adventurer Sheet)
-
-                
-
-                //Switch to running frame
-                if ((velocity.X != 0 && currentFrame < 4))
-                {
-                    currentFrame = 4;
-                }
-
-
-                //Cycle Back to Starting running frame
-                if (velocity.X != 0 && currentFrame >= 8 && !midJump && !isSliding)
-                {
-                    currentFrame = 4;
-                }
-
-                if (velocity.X == 0 && !midJump && !isSliding)
-                {
-                    //Standing still frames
-                    if (currentFrame >= 3)
-                    {
-                        currentFrame = 0;
-                    }
-                }
-
-
-
-                if (midJump)
-                {
-                    
-                    if (currentFrame < 13)
-                    {
-                        currentFrame = 13;
-                    }
-
-                }
-
-                /*
-                if (isSliding)
-                {
-                    if (currentFrame < 9 || currentFrame > 12)
-                    {
-                        currentFrame = 9;
-                    }
-                    if (currentFrame == 12)
-                    {
-                        currentFrame = 9;
-                    }
-                    Console.WriteLine("Slide actiated");
-
-                }
-                */
-
-                if (currentFrame < 20 && currentFrame != 9)
-                {
-
-                    frameDelay++;
-
-                    if (frameDelay > frameDelayCount)
-                    {
-                        frameDelay = 0;
-                        currentFrame++;
-                    }
-                }
-
-
-
-                #endregion
-
-                //Update Player position values
-                player.X = player.X + (int)velocity.X;
-                player.Y = player.Y + (int)velocity.Y;
-
-                base.Update(gameTime);
+                velocity.Y -= playerJump;
+                landInstance.Play();
             }
-
         }
 
+        //Sets up variables for each frame.
+        private float FrameReset(GameTime gameTime)
+        {
+
+            //Reset to be motionless for constant speed
+            velocity.X = 0;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            player.Height = GetCurrent_PlayerHeight();
+
+            return deltaTime;
+        }
+
+        //Player height will change based on the height of the frame.
+        //Important for jumping.
+        private int GetCurrent_PlayerHeight()
+        {
+            int newHeight = picSize * scale;
+
+            return newHeight;
+        }
 
         protected override void LoadContent()
         {

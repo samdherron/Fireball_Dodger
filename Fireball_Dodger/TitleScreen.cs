@@ -163,45 +163,10 @@ namespace Fireball_Dodger
 
                 darkenTimer++;
 
-                //Waits for darkenTimer to increment to 3 before switch to darker image
-                if (darkenTimer >= 10)
-                {
-                    darkenTimer = 0;
+                CheckAnimationTimer();
 
-                    if (darkenIncrement == 0 || darkenImage == true)
-                    {
-                        darkenIncrement++;
-                        darkenImage = true;
-                    }
-
-                    if (darkenIncrement == 4 || darkenImage == false)
-                    {
-                        darkenImage = false;
-                        darkenIncrement--;
-                    }
-
-                }
-
-
-                //Switches flame demon texture depending on increment value
-                switch (darkenIncrement)
-                {
-                    case 0:
-                        spriteBatch.Draw(flameDemonTitle, flameDemonShape, Color.White);
-                        break;
-                    case 1:
-                        spriteBatch.Draw(flameDemonOriginal, flameDemonShape, Color.White);
-                        break;
-                    case 2:
-                        spriteBatch.Draw(flameDemonTitle_dark1, flameDemonShape, Color.White);
-                        break;
-                    case 3:
-                        spriteBatch.Draw(flameDemonTitle_dark2, flameDemonShape, Color.White);
-                        break;
-                    case 4:
-                        spriteBatch.Draw(flameDemonTitle_dark3, flameDemonShape, Color.White);
-                        break;
-                }
+                AnimateFlameDemon();
+                
             }
 
             //Draws music toggle message on death screen aswell by ignoring if statement above
@@ -209,6 +174,52 @@ namespace Fireball_Dodger
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        //Switches flame demon texture depending on increment value
+        private void AnimateFlameDemon()
+        {
+
+            switch (darkenIncrement)
+            {
+                case 0:
+                    spriteBatch.Draw(flameDemonTitle, flameDemonShape, Color.White);
+                    break;
+                case 1:
+                    spriteBatch.Draw(flameDemonOriginal, flameDemonShape, Color.White);
+                    break;
+                case 2:
+                    spriteBatch.Draw(flameDemonTitle_dark1, flameDemonShape, Color.White);
+                    break;
+                case 3:
+                    spriteBatch.Draw(flameDemonTitle_dark2, flameDemonShape, Color.White);
+                    break;
+                case 4:
+                    spriteBatch.Draw(flameDemonTitle_dark3, flameDemonShape, Color.White);
+                    break;
+            }
+        }
+
+        private void CheckAnimationTimer()
+        {
+            //Waits for darkenTimer to increment to 3 before switch to darker image
+            if (darkenTimer >= 10)
+            {
+                darkenTimer = 0;
+
+                if (darkenIncrement == 0 || darkenImage == true)
+                {
+                    darkenIncrement++;
+                    darkenImage = true;
+                }
+
+                if (darkenIncrement == 4 || darkenImage == false)
+                {
+                    darkenImage = false;
+                    darkenIncrement--;
+                }
+
+            }
         }
     }
 }
