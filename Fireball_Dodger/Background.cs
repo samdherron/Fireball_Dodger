@@ -67,57 +67,45 @@ namespace Fireball_Dodger
             spriteBatch.FillRectangle(floorBounds, Color.White);
             spriteBatch.Draw(gameBG, gameBackground, Color.White);
 
-            //Gradient darkening of background after player death
+            // Gradient darkening of background after player death
             if (!Player.playerAlive)
             {
                 darkenTimer++;
 
-                DarkenTimerHandler();
+                //Waits for darkenTimer to increment to 3 before switch to darker image
+                if (darkenTimer >= 3)
+                {
+                    darkenTimer = 0;
 
-                DarkenBG();
+                    //To stop it from incrementing past the number of images
+                    if (darkenIncrement != 4)
+                    {
+                        darkenIncrement++;
+                    }
+                }
+                //Draws sprite corresponding with increment value
+                switch (darkenIncrement)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        spriteBatch.Draw(gameBG_darken1, gameBackground, Color.White);
+                        break;
+                    case 2:
+                        spriteBatch.Draw(gameBG_darken2, gameBackground, Color.White);
+                        break;
+                    case 3:
+                        spriteBatch.Draw(gameBG_darken3, gameBackground, Color.White);
+                        break;
+                    case 4:
+                        spriteBatch.Draw(gameBG_darken4, gameBackground, Color.White);
+                        break;
 
+                }
             }
 
             spriteBatch.End();
 
-        }
-
-        private void DarkenBG()
-        {
-            //Draws darkened background sprite corresponding with increment value
-            switch (darkenIncrement)
-            {
-                case 0:
-                    break;
-                case 1:
-                    spriteBatch.Draw(gameBG_darken1, gameBackground, Color.White);
-                    break;
-                case 2:
-                    spriteBatch.Draw(gameBG_darken2, gameBackground, Color.White);
-                    break;
-                case 3:
-                    spriteBatch.Draw(gameBG_darken3, gameBackground, Color.White);
-                    break;
-                case 4:
-                    spriteBatch.Draw(gameBG_darken4, gameBackground, Color.White);
-                    break;
-
-            }
-        }
-
-        private void DarkenTimerHandler()
-        {
-            //Waits for darkenTimer to increment to 3 before switching to darker image
-            if (darkenTimer >= 3)
-            {
-                darkenTimer = 0;
-
-                //To stop it from incrementing past the number of images
-                if (darkenIncrement != 4)
-                {
-                    darkenIncrement++;
-                }
-            }
         }
 
         public override void Update(GameTime gameTime)
