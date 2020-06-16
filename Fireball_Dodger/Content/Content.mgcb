@@ -452,6 +452,18 @@
 /processorParam:Quality=Best
 /build:Sound/landNoise.wav
 
+#begin Sound/lavaActivation.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/lavaActivation.mp3
+
+#begin Sound/lavaHit.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/lavaHit.mp3
+
 #begin Sound/rockPowerupHitSound.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor

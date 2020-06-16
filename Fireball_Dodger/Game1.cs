@@ -82,6 +82,7 @@ namespace Fireball_Dodger
 
             if (Player.newGame)
             {
+                Console.WriteLine("New game activated");
                 //Set up new game variables
                 Player.player = new Rectangle(75, 330 - 64, Player.picSize * Player.scale, Player.picSize * Player.scale);
                 Player.spriteDirection = SpriteEffects.None;
